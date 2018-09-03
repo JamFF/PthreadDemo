@@ -1,2 +1,2 @@
 # PthreadDemo
-Pthread基本使用
+Linux下Pthread基本使用
