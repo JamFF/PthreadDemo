@@ -72,24 +72,17 @@ void *th_fun(void *arg) {
 }
 
 JNIEXPORT void JNICALL
-Java_com_hongfan_pthread_PosixThread_pthread(JNIEnv *env, jobject instance) {
-
-    pthread_t tid;
-    pthread_create(&tid, NULL, th_fun, "NO1");
-}
-
-JNIEXPORT void JNICALL
 Java_com_hongfan_pthread_PosixThread_init(JNIEnv *env, jobject instance) {
 
     // 获取JavaVM，方式二
     (*env)->GetJavaVM(env, &javaVM);
 
-    // 在主线程中FindClass，获取class必须要在主线程
+    // FindClass，不能单纯的将uuidutils_jcls作为成员变量
     jclass uuidutils_jcls = (*env)->FindClass(env, "com/hongfan/pthread/UUIDUtils");
-    // 创建全局引用，必须在主线程
+    // 必须在主线程创建，必须创建全局引用，才可在子线程中使用，否则会报错
     uuidutils_jcls_global = (*env)->NewGlobalRef(env, uuidutils_jcls);
 
-    // 获取MethodID，可以在子线程
+    // 获取MethodID，可在主线程，可在子线程
     /*uuidutils_get_mid = (*env)->GetStaticMethodID(env, uuidutils_jcls_global, "get",
                                                   "()Ljava/lang/String;");*/
 }
@@ -99,4 +92,11 @@ Java_com_hongfan_pthread_PosixThread_destroy(JNIEnv *env, jobject instance) {
 
     // 释放全局引用
     (*env)->DeleteGlobalRef(env, uuidutils_jcls_global);
+}
+
+JNIEXPORT void JNICALL
+Java_com_hongfan_pthread_PosixThread_startThread(JNIEnv *env, jobject instance) {
+
+    pthread_t tid;
+    pthread_create(&tid, NULL, th_fun, "NO1");
 }

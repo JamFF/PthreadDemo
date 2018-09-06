@@ -27,12 +27,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        mPosixThread.pthread();
+        switch (v.getId()) {
+            case R.id.bt_test:
+                if (mPosixThread != null) {
+                    mPosixThread.startThread();
+                }
+                break;
+        }
     }
 
     @Override
     protected void onDestroy() {
-        mPosixThread.destroy();
+        if (mPosixThread != null) {
+            mPosixThread.destroy();
+        }
         super.onDestroy();
     }
 }

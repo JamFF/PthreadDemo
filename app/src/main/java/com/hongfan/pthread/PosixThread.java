@@ -11,7 +11,7 @@ public class PosixThread {
 
     public native void destroy();
 
-    public native void pthread();
+    public native void startThread();
 
     static {
         System.loadLibrary("native-lib");
